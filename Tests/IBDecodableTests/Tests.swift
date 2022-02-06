@@ -593,11 +593,12 @@ class Tests: XCTestCase {
         let url = self.url(forResource:"StoryboardHidesBottomBarWhenPushed", withExtension: "storyboard")
         do {
             let file = try StoryboardFile(url: url)
-            let hidesBttomBarValues = file.document.scenes?.map { $0.viewController?.viewController.hidesBottomBarWhenPushed ?? false } ?? []
+            let viewControllers = file.document.scenes?.map { $0.viewController?.viewController } ?? []
+            let hidesBottomBarTrueViewController = viewControllers.first(where: { $0?.id == "Y6W-OH-hqX" }) as? ViewController
+            let hidesBottomBarNilViewController = viewControllers.first(where: { $0?.id == "jTW-bG-fbv" }) as? ViewController
             
-            XCTAssertEqual(hidesBttomBarValues.count, 2)
-            XCTAssertEqual(hidesBttomBarValues.filter { $0 == true }.count, 1)
-            XCTAssertEqual(hidesBttomBarValues.filter { $0 == false }.count, 1)
+            XCTAssertTrue(hidesBottomBarTrueViewController?.hidesBottomBarWhenPushed ?? false)
+            XCTAssertNil(hidesBottomBarNilViewController?.hidesBottomBarWhenPushed)
         } catch {
             XCTFail("\(error)")
         }
